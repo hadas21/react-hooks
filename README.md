@@ -93,7 +93,7 @@ function Toggle() {
 
 Notice how the state setter function, `setToggle()`, is called by our `onClick` event listeners. To update the value of `toggle` and re-render this component with the new value, we simply call the `setToggle()` function with the next state value as an argument.
 
-With the State Hook, updating the state is as simple as calling a state setter function. Calling the state setter signals to React that the component needs to re-render, so the entire function defining the component is executed again. The magic of `useState
+With the State Hook, updating the state is as simple as calling a state setter function. Calling the state setter signals to React that the component needs to re-render, so the entire function defining the component is executed again. The magic of `useState`
 
 ### Exercises
 
@@ -176,4 +176,38 @@ const handleChange = ({ target }) => setEmail(target.value);
 ```
 
 This version uses object destructuring to directly extract the `target.value` from the event object and pass it as the new email value to `setEmail()`. It's a matter of preference and readability to choose between the different variations, but all of them functionally achieve the same result.
+
+### Exercises
+
+Open [PhoneNumber.js](./src/components/PhoneNumber.js) and follow instructions 1-3.
+
+
+## Previous State
+
+In React, state updates are asynchronous, which means that there can be scenarios where portions of your code run before the state is finished updating. To handle this, it's best practice to update state using a callback function to ensure you're working with the most up-to-date state values.
+
+Let's take a look at the following code example:
+
+```jsx
+import React, { useState } from 'react';
+
+export default function Counter() {
+  const [count, setCount] = useState(0);
+
+  const increment = () => setCount(prevCount => prevCount + 1);
+
+  return (
+    <div>
+      <p>Wow, you've clicked that button: {count} times</p>
+      <button onClick={increment}>Click here!</button>
+    </div>
+  );
+}
+```
+
+In this code, we have a `count` state variable initialized to 0 using the `useState` hook. The `increment` function is called when the button is clicked, and it updates the state using the `setCount` state setter with a callback function.
+
+By using the callback function `(prevCount => prevCount + 1)` as the argument for `setCount`, we ensure that the next value of `count` depends on the previous value of `count`. The callback function receives the previous count as an argument (`prevCount`) and returns the next value by incrementing the previous count by 1 (`prevCount + 1`).
+
+Using this approach ensures that we're working with the most up-to-date value of `count` and helps prevent accidental outdated values. Although in this specific example, `setCount(count + 1)` would work the same, using the callback method is considered safer and more reliable in scenarios where state updates are based on the previous state value.
 
