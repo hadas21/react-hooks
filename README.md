@@ -1,70 +1,146 @@
-# Getting Started with Create React App
+# React Hooks
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Objectives:
 
-## Available Scripts
+- Build a “stateful” function component.
+- Use the State Hook.
+- Initialize a state and set a state.
+- Define event handlers.
+- Use state setter callback functions.
+- Use state with arrays and objects.
 
-In the project directory, you can run:
+## Why Use Hooks?
 
-### `npm start`
+If we want to add state to our function component or make our app respond to changes in data, what should we do?
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+In this lesson, we'll explore React Hooks and how they empower us to effectively use function components.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+React Hooks are simply functions that allow us to manage the internal state of components and handle side effects after rendering directly from our function components. With Hooks, we can determine what we want to display to users by declaring how our user interface should look based on the state.
 
-### `npm test`
+React provides several built-in Hooks, including `useState()`, `useEffect()`, `useContext()`, `useReducer()`, and `useRef()`. You can find the complete list in the React documentation.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+React Hooks provide a more intuitive and straightforward approach to building React applications. They promote code reuse, reduce complexity, and make your components more modular. By mastering Hooks, you'll be equipped to build powerful and efficient React applications.
 
-### `npm run build`
+## The State Hook
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Before we begin, Open the [Counter.js](./src/components/Counter.js) file. We will learn how this code works in the next few exercises. Don’t worry about the details of what is going on here just yet, but take a few moments to read through the definition of this function component and develop some _wild_ theories about what this code may be doing.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Run `nmp start` to see how the code behaves!
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Let's dive into using the State Hook, which is the most commonly used Hook for building React components. The State Hook is a named export from the React library, so we import it using object destructuring like this:
 
-### `npm run eject`
+```jsx
+import React, { useState } from "react";
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+When we call the `useState()` function, it returns an array with two values:
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+1. The current state: The current value of this state.
+2. The state setter: A function that we can use to update the value of this state.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+We can use these two values to track the current state of a data value or property and change it when needed. To extract the values from the array, we can assign them to local variables using array destructuring. For example:
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+```jsx
+const [currentState, setCurrentState] = useState();
+```
 
-## Learn More
+Let's take a look at another example of a function component that uses the State Hook:
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+```jsx
+import React, { useState } from "react";
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+function LikeButton() {
+  const [likes, setLikes] = useState(0);
 
-### Code Splitting
+  const handleLike = () => {
+    setLikes(likes + 1);
+  };
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+  return (
+    <div>
+      <p>
+        This post has {likes} {likes === 1 ? "like" : "likes"}
+      </p>
+      <button onClick={handleLike}>Like</button>
+    </div>
+  );
+}
+```
 
-### Analyzing the Bundle Size
+In this example, we have a `LikeButton` component that keeps track of the number of likes for a post. The initial state is set to `0` using `useState(0)`.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+The `handleLike` function is called when the "Like" button is clicked. It uses the state setter function `setLikes` to increment the number of likes by 1.
 
-### Making a Progressive Web App
+The component renders a paragraph displaying the current number of likes, along with proper pluralization of the word "like" based on the count. The button allows users to increment the likes by clicking it.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+With each click, the state is updated, triggering a re-render to reflect the updated number of likes on the screen.
 
-### Advanced Configuration
+```jsx
+import React, { useState } from "react";
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+function Toggle() {
+  const [toggle, setToggle] = useState();
 
-### Deployment
+  return (
+    <div>
+      <p>The toggle is {toggle}</p>
+      <button onClick={() => setToggle("On")}>On</button>
+      <button onClick={() => setToggle("Off")}>Off</button>
+    </div>
+  );
+}
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+Notice how the state setter function, `setToggle()`, is called by our `onClick` event listeners. To update the value of `toggle` and re-render this component with the new value, we simply call the `setToggle()` function with the next state value as an argument.
 
-### `npm run build` fails to minify
+With the State Hook, updating the state is as simple as calling a state setter function. Calling the state setter signals to React that the component needs to re-render, so the entire function defining the component is executed again. The magic of `useState
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+### Exercises
+
+Open [ColorPicker.js](./src/components/ColorPicker.js) and follow instructions 1-4.
+
+## Initialize State
+
+Let's take a look at the `ToggleLoading()` function component provided. What data type does the state variable hold in this example?
+
+```jsx
+import React, { useState } from "react";
+
+function ToggleLoading() {
+  const [isLoading, setIsLoading] = useState();
+
+  return (
+    <div>
+      <p>The data is {isLoading ? "Loading" : "Not Loading"}</p>
+      <button onClick={() => setIsLoading(true)}>Turn Loading On</button>
+      <button onClick={() => setIsLoading(false)}>Turn Loading Off</button>
+    </div>
+  );
+}
+```
+
+In this case, the state variable `isLoading` holds a boolean value. Booleans are commonly used in React applications to represent whether data is currently loading or not. The `true` and `false` values are passed to the state setter function `setIsLoading()`.
+
+The code functions correctly as is, but let's say we want our component to start with `isLoading` set to `true`.
+
+To initialize our state with a specific value, we can simply pass that initial value as an argument to the `useState()` function call:
+
+```jsx
+const [isLoading, setIsLoading] = useState(true);
+```
+
+This change affects our component in three ways:
+
+1. During the first render, the initial state argument (`true`) is used.
+2. When the state setter is called (`setIsLoading()`), React ignores the initial state argument and uses the new value provided (`true` or `false`).
+3. When the component re-renders for any other reason, React continues to use the same value from the previous render.
+
+If we don't provide an initial value when calling `useState()`, the current value of the state during the first render will be `undefined`. While this may work for the computer executing the code, it can be less clear for humans reading the code. It's preferable to explicitly initialize our state. If we don't have the necessary value during the first render, we can explicitly pass `null` instead of leaving the value undefined.
+
+### Exercises
+
+1. Open [colorPickerModification.md](./exercises/colorPickerModification.md) and follow the instructions.
+2. In the modified [ColorPicker()](./src/components/ColorPicker.js) component, initialize the state so that “Tomato” is the selected color for our component’s first render.
+
+## Use State Setter Outside of JSX
+cc
