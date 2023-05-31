@@ -143,4 +143,37 @@ If we don't provide an initial value when calling `useState()`, the current valu
 2. In the modified [ColorPicker()](./src/components/ColorPicker.js) component, initialize the state so that “Tomato” is the selected color for our component’s first render.
 
 ## Use State Setter Outside of JSX
-cc
+Let's take a look at the example code that demonstrates managing the changing value of a string as a user types into a text input field:
+
+```jsx
+import React, { useState } from 'react';
+
+export default function EmailTextInput() {
+  const [email, setEmail] = useState('');
+
+  const handleChange = ({ target }) => setEmail(target.value);
+
+  return (
+    <input value={email} onChange={handleChange} />
+  );
+}
+```
+
+Here's how the code works:
+
+- We use array destructuring to create our local state variable `email` and the setter function `setEmail()`.
+- The `email` variable is assigned the current state value at index 0 from the array returned by `useState()`.
+- The `setEmail()` function is assigned a reference to the state setter function at index 1 from the array returned by `useState()`.
+- In our JSX, the `<input>` tag has an `onChange` event listener. This event listener triggers the `handleChange` function whenever the user types something in the input field.
+- The `handleChange` function extracts the new email value from the `event.target.value` and calls `setEmail()` to update the state with the new value.
+
+In the provided code, the event handler (`handleChange`) is defined outside of the JSX, following the practice of separating logic from the JSX for better code organization and maintainability.
+
+You may notice different versions of the `handleChange` function in React code. In this example, we used the most concise version:
+
+```jsx
+const handleChange = ({ target }) => setEmail(target.value);
+```
+
+This version uses object destructuring to directly extract the `target.value` from the event object and pass it as the new email value to `setEmail()`. It's a matter of preference and readability to choose between the different variations, but all of them functionally achieve the same result.
+
