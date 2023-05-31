@@ -1,4 +1,6 @@
-/ regex to match numbers between 1 and 10 digits long
+import React,{useState} from 'react';
+
+// regex to match numbers between 1 and 10 digits long
 const validPhoneNumber = /^\d{1,10}$/;
 
 export default function PhoneNumber() {
