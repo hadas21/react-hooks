@@ -211,3 +211,5 @@ By using the callback function `(prevCount => prevCount + 1)` as the argument fo
 
 Using this approach ensures that we're working with the most up-to-date value of `count` and helps prevent accidental outdated values. Although in this specific example, `setCount(count + 1)` would work the same, using the callback method is considered safer and more reliable in scenarios where state updates are based on the previous state value.
 
+## Arrays in State
+
