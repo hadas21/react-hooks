@@ -143,19 +143,18 @@ If we don't provide an initial value when calling `useState()`, the current valu
 2. In the modified [ColorPicker()](./src/components/ColorPicker.js) component, initialize the state so that “Tomato” is the selected color for our component’s first render.
 
 ## Use State Setter Outside of JSX
+
 Let's take a look at the example code that demonstrates managing the changing value of a string as a user types into a text input field:
 
 ```jsx
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 export default function EmailTextInput() {
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState("");
 
   const handleChange = ({ target }) => setEmail(target.value);
 
-  return (
-    <input value={email} onChange={handleChange} />
-  );
+  return <input value={email} onChange={handleChange} />;
 }
 ```
 
@@ -181,7 +180,6 @@ This version uses object destructuring to directly extract the `target.value` fr
 
 Open [PhoneNumber.js](./src/components/PhoneNumber.js) and follow instructions 1-3.
 
-
 ## Previous State
 
 In React, state updates are asynchronous, which means that there can be scenarios where portions of your code run before the state is finished updating. To handle this, it's best practice to update state using a callback function to ensure you're working with the most up-to-date state values.
@@ -189,12 +187,12 @@ In React, state updates are asynchronous, which means that there can be scenario
 Let's take a look at the following code example:
 
 ```jsx
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 export default function Counter() {
   const [count, setCount] = useState(0);
 
-  const increment = () => setCount(prevCount => prevCount + 1);
+  const increment = () => setCount((prevCount) => prevCount + 1);
 
   return (
     <div>
@@ -213,3 +211,182 @@ Using this approach ensures that we're working with the most up-to-date value of
 
 ## Arrays in State
 
+```js
+import React, { useState } from "react";
+
+// Static array of pizza options offered.
+const options = ["Bell Pepper", "Sausage", "Pepperoni", "Pineapple"];
+
+export default function PersonalPizza() {
+  const [selected, setSelected] = useState([]);
+
+  const toggleTopping = ({ target }) => {
+    const clickedTopping = target.value;
+    setSelected((prev) => {
+      // Check if clicked topping is already selected
+      if (prev.includes(clickedTopping)) {
+        // Filter the clicked topping out of state
+        return prev.filter((t) => t !== clickedTopping);
+      } else {
+        // Add the clicked topping to our state
+        return [clickedTopping, ...prev];
+      }
+    });
+  };
+
+  return (
+    <div>
+      {options.map((option) => (
+        <button value={option} onClick={toggleTopping} key={option}>
+          {selected.includes(option) ? "Remove " : "Add "}
+          {option}
+        </button>
+      ))}
+      <p>Order a {selected.join(", ")} pizza</p>
+    </div>
+  );
+}
+```
+
+In the given example, we have two arrays:
+
+The `options` array contains the available pizza toppings offered by a pizza restaurant. This array is static and does not change. It is defined outside the function component to avoid unnecessary re-creation on each component re-render.
+
+The `selected` array represents the toppings selected for a personal pizza. This array is dynamic and changes based on user actions. It is initialized as an empty array using the `useState()` hook.
+
+To render the buttons for each topping in the `options` array, we use the `.map()` method in JSX. When a button is clicked, the `toggleTopping()` event handler is called. It uses the information from the event object to determine which topping was clicked.
+
+When updating an array in state, we replace the previous array with a new array. To preserve any data from the previous array, we use the spread syntax `...prev` to copy the elements to the new array.
+
+In the event handler, we use array methods such as `.includes()`, `.filter()`, and `.map()`. The `.includes()` method checks if an element is already present in the array. The `.filter()` method removes the clicked topping from the state by creating a new array without that element. The `.map()` method is used to render the buttons dynamically based on the selected state.
+
+Understanding and becoming proficient in JavaScript array methods such as `.includes()`, `.filter()`, and `.map()` can greatly enhance our ability to work with React and build more powerful applications. Investing time to strengthen JavaScript skills can contribute to faster development and more enjoyable React development experiences.
+
+### Exercises
+
+Open [GroceryShopping.js](./src/components/GroceryShopping.js) and follow the comment instructions 1-3.
+
+### Objects in State
+
+In React, state can also be used with objects. This is particularly useful when dealing with a set of related variables that can be grouped together. Let's see an example that demonstrates this.
+
+Consider a `Login` component:
+
+```javascript
+export default function Login() {
+  const [formState, setFormState] = useState({});
+
+  const handleChange = ({ target }) => {
+    const { name, value } = target;
+    setFormState((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  return (
+    <form>
+      <input
+        value={formState.firstName}
+        onChange={handleChange}
+        name="firstName"
+        type="text"
+      />
+      <input
+        value={formState.password}
+        onChange={handleChange}
+        type="password"
+        name="password"
+      />
+    </form>
+  );
+}
+```
+
+In the code snippet, the `Login` component initializes the state using the `useState` hook. It declares `formState` as an empty object, which will hold the values of the form inputs.
+
+The component defines an event handler function called `handleChange`, which is triggered by the `onChange` event of the input fields. When the event is fired, we use object destructuring to extract the `name` and `value` properties from the `target` object. The `name` property identifies the input field, while the `value` property contains the updated value of the input.
+
+To update the state, we use the state setter function `setFormState` with a callback function. Within the callback, we create a new object using the spread syntax (`...prev`). This spreads the properties from the previous state object. We then use computed property names to dynamically assign the updated value based on the `name` property. By enclosing `[name]` in square brackets, we create a new property in the object with the key equal to the value stored in `name`, and assign it the updated value.
+
+In the JSX code, the `value` attribute of the input fields is bound to the corresponding properties of the `formState` object. This ensures that the inputs display the values stored in the state. The `name` attribute of the input fields is set to identify which input triggered the change event. This allows us to determine the appropriate property to update in the state object.
+
+Using state with objects provides a structured approach to manage related variables. The spread syntax and computed property names enable efficient and dynamic updates of the state object based on user input.
+
+### Exercises
+
+Open [editProfile.md](./exercises/editProfile.md) and follow the instructions to make the [EditProfile.js](./src//components/EditProfile.js) component render properly.
+
+## Separate Hooks for Separate States
+
+There are situations where it's beneficial to store related data separately in different state variables, rather than grouping them in a complex data structure like an object or array. This approach simplifies the management of dynamic data and reduces the likelihood of introducing bugs.
+
+Let's consider an example where we have a subject we're studying at school. Initially, we might be tempted to store all the related data in a single state object:
+
+```javascript
+function Subject() {
+  const [state, setState] = useState({
+    currentGrade: "B",
+    classmates: ["Hasan", "Sam", "Emma"],
+    classDetails: { topic: "Math", teacher: "Ms. Barry", room: 201 },
+    exams: [
+      { unit: 1, score: 91 },
+      { unit: 2, score: 88 },
+    ],
+  });
+  // ...
+}
+```
+
+While this approach works, updating specific values within this large state object can become messy and error-prone. For instance, updating the grade for a specific exam would require intricate logic:
+
+```javascript
+setState((prev) => ({
+  ...prev,
+  exams: prev.exams.map((exam) => {
+    if (exam.unit === updatedExam.unit) {
+      return {
+        ...exam,
+        score: updatedExam.score,
+      };
+    } else {
+      return exam;
+    }
+  }),
+}));
+```
+
+To avoid such complexity and potential bugs, it's better to create separate state variables for values that tend to change independently. We can refactor the example as follows:
+
+```javascript
+function Subject() {
+  const [currentGrade, setGrade] = useState("B");
+  const [classmates, setClassmates] = useState(["Hasan", "Sam", "Emma"]);
+  const [classDetails, setClassDetails] = useState({
+    topic: "Math",
+    teacher: "Ms. Barry",
+    room: 201,
+  });
+  const [exams, setExams] = useState([
+    { unit: 1, score: 91 },
+    { unit: 2, score: 88 },
+  ]);
+  // ...
+}
+```
+
+By managing dynamic data with separate state variables, our code becomes simpler, more readable, easier to test, and more reusable across components. It allows us to focus on the specific data that needs to be updated without the need for complex copying and merging operations.
+
+Another reason for using separate state hooks is to avoid extra re-rendering, which is important for optimizing performance.
+
+When we have a single state object that holds multiple values, updating any part of that object will trigger a re-render of the entire component, even if other parts of the state haven't changed. This can be inefficient, especially if the component has a large number of sub-components or complex rendering logic.
+
+By using separate state hooks for different values that change independently, we can selectively update only the specific state variable that needs to be updated. When we update a specific state variable, React will only re-render the parts of the component that depend on that specific state variable, rather than re-rendering the entire component.
+
+This approach helps to minimize unnecessary re-renders and optimize the performance of our React applications. It ensures that only the relevant parts of the component are updated when the corresponding state variable changes, leading to faster rendering and better overall application performance.
+
+Additionally, separating state into individual variables based on their changing patterns improves code organization and readability. It makes it easier to reason about and manage the state of the component, as each state variable is responsible for a specific aspect of the component's data.
+
+### Exercises
+
+Open [musical.md](./exercises/musical.md) and follow the given instructions.
